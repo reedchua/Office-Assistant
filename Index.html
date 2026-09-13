@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>辦公室系統與行政管理網上學習測驗中心</title>
+    <style>
+        :root {
+            --primary: #1E293B;
+            --accent: #0284C7;
+            --success: #15803D;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #0F172A;
+            --text-sub: #475569;
+            --border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 20px 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+
+        .header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 15px -3px rgba(2, 132, 199, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .module-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            background-color: #E0F2FE;
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .card-footer {
+            margin-top: 15px;
+            font-size: 0.850rem;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 頁尾版權與聯絡資訊 */
+        footer {
+            width: 100%;
+            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            background-color: #FFFFFF;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>辦公室系統與行政管理網上學習中心</h1>
+        <p>歡迎使用互動配對測驗平台。請選擇下方的學習單元，透過限時配對與語音輔助強化專業知識。</p>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            <a href="OA01.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 01</span>
+                        <span>🎯</span>
+                    </div>
+                    <h3>辦公室系統與成本控制管理測驗（一）</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA02.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 02</span>
+                        <span>🎯</span>
+                    </div>
+                    <h3>辦公室系統與成本控制管理測驗（二）</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA03.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 03</span>
+                        <span>☎️</span>
+                    </div>
+                    <h3>基本接待與電話應對技巧測驗</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA04.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 04</span>
+                        <span>🛵</span>
+                    </div>
+                    <h3>文件交收及外勤工作時間管理測驗</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA05.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 05</span>
+                        <span>✉️</span>
+                    </div>
+                    <h3>郵務及郵件處理測驗</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA06.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 06</span>
+                        <span>📚</span>
+                    </div>
+                    <h3>辦公室行政與實務操作測驗（六）</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA07.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 07</span>
+                        <span>📚</span>
+                    </div>
+                    <h3>辦公室行政與實務操作測驗（七）</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA08.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 08</span>
+                        <span>📚</span>
+                    </div>
+                    <h3>辦公室行政與實務操作測驗（八）</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA09.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 09</span>
+                        <span>📚</span>
+                    </div>
+                    <h3>辦公室行政與實務操作測驗（九）</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+
+            <a href="OA10.html" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="module-badge">單元 10</span>
+                        <span>📚</span>
+                    </div>
+                    <h3>辦公室行政與實務操作測驗（十）</h3>
+                </div>
+                <div class="card-footer"><span>開始測驗與複習 ➔</span></div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 頁尾版權與聯絡聲明 -->
+    <footer>
+        <p style="margin-bottom: 4px;"><strong>© 2026 Hung Hung Chua (Reed Chua). All Rights Reserved.</strong></p>
+        <p style="margin-bottom: 4px;">本測驗教材及內容受版權法保護，未經書面授權不得複製、轉載或用於商業用途。</p>
+        <p>如有課程查詢、教學合作或意見反饋，歡迎聯絡：<a href="mailto:reedchua@yahoo.com">reedchua@yahoo.com</a></p>
+    </footer>
+
+</body>
+</html>
