@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>辦公室常用文件及表格測驗</title>
+    <style>
+        :root {
+            --primary: #1E293B;
+            --accent: #0284C7;
+            --success: #15803D;
+            --error: #B91C1C;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #0F172A;
+            --text-sub: #475569;
+            --border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+        }
+
+        /* 儀表板：計時器與動態統計 */
+        .dashboard-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 20px;
+            width: 100%;
+            max-width: 950px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .stat-item {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        .stat-item span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-left: 5px;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 950px;
+            margin-bottom: 30px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            min-height: 75px;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card.selected {
+            border-color: var(--accent);
+            background-color: #F0F9FF;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+        }
+
+        .card.matched {
+            border-color: var(--border);
+            background-color: #F1F5F9;
+            opacity: 0.35;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        .card .text {
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .card.term .text {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* 結算報告對話框 */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .modal h2 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .modal-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+
+        .modal-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+        }
+
+        .explanation-title {
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .explanation-list {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .explanation-item {
+            background-color: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            font-size: 0.88rem;
+        }
+
+        .explanation-item strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0F172A;
+        }
+
+        /* 頁尾版權與聯絡資訊 */
+        footer {
+            width: 100%;
+            margin-top: 20px;
+            padding: 18px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            background-color: #FFFFFF;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>辦公室常用文件及表格測驗</h1>
+        <p>請將左側的辦公室文件或表格名稱，配對至右側對應的正確用途與說明。</p>
+    </div>
+
+    <!-- 儀表板 -->
+    <div class="dashboard-bar">
+        <div class="stat-item">⏱️ 所需時間：<span id="timer-display">00:00</span></div>
+        <div class="stat-item">🎯 完成配對：<span id="matched-display">0 / 6</span></div>
+        <div class="stat-item">❌ 錯誤次數：<span id="mistake-display">0</span></div>
+    </div>
+
+    <div class="game-container">
+        <div class="column" id="terms-column"></div>
+        <div class="column" id="defs-column"></div>
+    </div>
+
+    <!-- 測驗完成與解析 Modal -->
+    <div class="overlay" id="reward-modal">
+        <div class="modal">
+            <h2>練習完成！ 🎉</h2>
+            <div class="modal-score" id="score-display">100%</div>
+            <div class="modal-stats">
+                <span>⏱️ 總耗時：<strong id="final-time">00:00</strong></span>
+                <span>❌ 錯誤嘗試：<strong id="final-mistakes">0</strong></span>
+            </div>
+
+            <div class="explanation-title">📖 正確答案與概念解析</div>
+            <div class="explanation-list" id="explanation-container"></div>
+
+            <button class="btn" onclick="initGame()">開始下一輪練習 🔄</button>
+        </div>
+    </div>
+
+    <!-- 頁尾版權與聯絡聲明 -->
+    <footer>
+        <p style="margin-bottom: 4px;"><strong>© 2026 Hung Hung Chua (Reed Chua). All Rights Reserved.</strong></p>
+        <p style="margin-bottom: 4px;">本測驗教材及內容受版權法保護，未經書面授權不得複製、轉載或用於商業用途。</p>
+        <p>如有課程查詢、教學合作或意見反饋，歡迎聯絡：<a href="mailto:reedchua@yahoo.com">reedchua@yahoo.com</a></p>
+    </footer>
+
+    <script>
+        const database = [
+            { id: 1, term: '商業書信 (Business Letter)', def: '機構間傳達訊息並可作為記錄存檔的通訊方式，如推銷信、詢問信。' },
+            { id: 2, term: '傳真 (Fax)', def: '可快捷傳送文件和圖表並即時收到回覆，同時可儲存記錄方便查閱。' },
+            { id: 3, term: '電子郵件 (e-mail)', def: '透過電腦網絡傳送資料，可採用信件或通報便條格式進行內部或外部通訊。' },
+            { id: 4, term: '通報便條 (Memorandum)', def: '公司內部部門或同事間發放消息、詢問資料及發出工作指示的內部通訊文件。' },
+            { id: 5, term: '電話留言便條', def: '記錄來電者資料及留言內容，方便相關同事後續聯絡或跟進。' },
+            { id: 6, term: '詢問信 (Letter of Enquiry)', def: '買方向供應商詢問有關貨品價格、規格和相關資料的信件。' },
+            { id: 7, term: '報價單 (Quotation)', def: '由供應商發出，回覆買方有關出售貨品資料及價格的正式文件。' },
+            { id: 8, term: '訂單 (Order)', def: '買方發給賣方的訂貨文件，詳細列明訂購貨品的數量、價目等細節。' },
+            { id: 9, term: '付運通知單 (Advice Note)', def: '賣方通知買方有關送貨詳情的文件，列明送貨方法及貨品送出日期。' },
+            { id: 10, term: '送貨單 (Delivery Note)', def: '送貨當日隨貨附上，由買方簽收作為已收到貨物的證明文件。' },
+            { id: 11, term: '發票 (Invoice)', def: '賣方發出有關已出售貨品的正式文件，主要作用是通知買方付款。' },
+            { id: 12, term: '借項通知單 (Debit Note)', def: '當發票金額少於應付金額時，賣方通知買方補繳少付款項細節的文件。' },
+            { id: 13, term: '貸項通知單 (Credit Note)', def: '當發票金額高於應付金額時，賣方通知買方多付款項及扣減細節的文件。' },
+            { id: 14, term: '月結單 (Statement of Account)', def: '總結整個月交易資料與帳面結餘，由賣方發給買方以安排結清款項。' },
+            { id: 15, term: '收據 (Receipt)', def: '證明已正式收妥貨款的憑證。' },
+            { id: 16, term: '文具提取請求單', def: '同事需要新文具時填寫並交由採購部處理的申請表格。' },
+            { id: 17, term: '零用現金傳票 (Petty Cash Voucher)', def: '職員因公事作出合規現金開支後，填寫交由主管簽名批准報銷的表格。' },
+            { id: 18, term: '送信及收信回條', def: '親自送遞重要信件或前往外地收集信件時填寫，交總務部處理的表格。' }
+        ];
+
+        let selectedTerm = null;
+        let selectedDef = null;
+        let currentPairs = [];
+        let matchedCount = 0;
+        let mistakeCount = 0;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        const ITEMS_PER_SESSION = 6;
+
+        // 設定語音發音為廣東話 (zh-HK)
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-HK';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            secondsElapsed = 0;
+            document.getElementById('timer-display').innerText = '00:00';
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function initGame() {
+            matchedCount = 0;
+            mistakeCount = 0;
+            selectedTerm = null;
+            selectedDef = null;
+            document.getElementById('reward-modal').style.display = 'none';
+            document.getElementById('matched-display').innerText = `0 / ${ITEMS_PER_SESSION}`;
+            document.getElementById('mistake-display').innerText = '0';
+
+            startTimer();
+
+            const shuffledDb = [...database].sort(() => 0.5 - Math.random());
+            currentPairs = shuffledDb.slice(0, ITEMS_PER_SESSION);
+
+            const termsCol = document.getElementById('terms-column');
+            termsCol.innerHTML = '';
+            currentPairs.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card term';
+                card.dataset.type = 'term';
+                card.dataset.id = item.id;
+                card.onclick = () => selectCard(card, item.term);
+                card.innerHTML = `<div class="text">${item.term}</div>`;
+                termsCol.appendChild(card);
+            });
+
+            const defsCol = document.getElementById('defs-column');
+            defsCol.innerHTML = '';
+            const shuffledDefs = [...currentPairs].sort(() => 0.5 - Math.random());
+            shuffledDefs.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.type = 'def';
+                card.dataset.id = item.id;
+                card.onclick = () => selectCard(card, item.def);
+                card.innerHTML = `<div class="text">${item.def}</div>`;
+                defsCol.appendChild(card);
+            });
+
+            speak('新一輪練習開始。');
+        }
+
+        function selectCard(card, soundText) {
+            if (card.classList.contains('matched')) return;
+
+            speak(soundText);
+            const type = card.dataset.type;
+
+            if (type === 'term') {
+                if (selectedTerm) selectedTerm.classList.remove('selected');
+                selectedTerm = card;
+                card.classList.add('selected');
+            } else {
+                if (selectedDef) selectedDef.classList.remove('selected');
+                selectedDef = card;
+                card.classList.add('selected');
+            }
+
+            if (selectedTerm && selectedDef) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const termId = selectedTerm.dataset.id;
+            const defId = selectedDef.dataset.id;
+
+            if (termId === defId) {
+                const t = selectedTerm;
+                const d = selectedDef;
+
+                setTimeout(() => {
+                    t.classList.remove('selected');
+                    d.classList.remove('selected');
+                    t.classList.add('matched');
+                    d.classList.add('matched');
+
+                    speak('配對正確。');
+                    matchedCount++;
+                    document.getElementById('matched-display').innerText = `${matchedCount} / ${ITEMS_PER_SESSION}`;
+
+                    if (matchedCount === ITEMS_PER_SESSION) {
+                        stopTimer();
+                        setTimeout(showReward, 600);
+                    }
+                }, 200);
+
+                selectedTerm = null;
+                selectedDef = null;
+            } else {
+                mistakeCount++;
+                document.getElementById('mistake-display').innerText = mistakeCount;
+
+                setTimeout(() => {
+                    speak('配對錯誤，請再試一次。');
+                    if(selectedTerm) selectedTerm.classList.remove('selected');
+                    if(selectedDef) selectedDef.classList.remove('selected');
+                    selectedTerm = null;
+                    selectedDef = null;
+                }, 400);
+            }
+        }
+
+        function showReward() {
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            const timeStr = `${mins}:${secs}`;
+            
+            const totalAttempts = ITEMS_PER_SESSION + mistakeCount;
+            const accuracy = Math.round((ITEMS_PER_SESSION / totalAttempts) * 100);
+
+            document.getElementById('score-display').innerText = `正確率：${accuracy}%`;
+            document.getElementById('final-time').innerText = timeStr;
+            document.getElementById('final-mistakes').innerText = mistakeCount;
+
+            const expContainer = document.getElementById('explanation-container');
+            expContainer.innerHTML = '';
+            currentPairs.forEach(item => {
+                const expItem = document.createElement('div');
+                expItem.className = 'explanation-item';
+                expItem.innerHTML = `<strong>📌 ${item.term}</strong>${item.def}`;
+                expContainer.appendChild(expItem);
+            });
+
+            document.getElementById('reward-modal').style.display = 'flex';
+            speak(`測驗完成！你的正確率係 ${accuracy} 百分比。`);
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>

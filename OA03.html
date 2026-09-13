@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基本接待與電話應對技巧測驗</title>
+    <style>
+        :root {
+            --primary: #1E293B;
+            --accent: #0284C7;
+            --success: #15803D;
+            --error: #B91C1C;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #0F172A;
+            --text-sub: #475569;
+            --border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+        }
+
+        /* 儀表板：計時器與動態統計 */
+        .dashboard-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 20px;
+            width: 100%;
+            max-width: 950px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .stat-item {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        .stat-item span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-left: 5px;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 950px;
+            margin-bottom: 30px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            min-height: 75px;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card.selected {
+            border-color: var(--accent);
+            background-color: #F0F9FF;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+        }
+
+        .card.matched {
+            border-color: var(--border);
+            background-color: #F1F5F9;
+            opacity: 0.35;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        .card .text {
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .card.term .text {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* 結算報告對話框 */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .modal h2 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .modal-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+
+        .modal-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+        }
+
+        .explanation-title {
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .explanation-list {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .explanation-item {
+            background-color: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            font-size: 0.88rem;
+        }
+
+        .explanation-item strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0F172A;
+        }
+
+        /* 頁尾版權與聯絡資訊 */
+        footer {
+            width: 100%;
+            margin-top: 20px;
+            padding: 18px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            background-color: #FFFFFF;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>基本接待與電話應對技巧測驗</h1>
+        <p>請將左側的接待、茶水禮儀或電話應對情境，配對至右側對應的正確處理方法或原則。</p>
+    </div>
+
+    <!-- 儀表板 -->
+    <div class="dashboard-bar">
+        <div class="stat-item">⏱️ 所需時間：<span id="timer-display">00:00</span></div>
+        <div class="stat-item">🎯 完成配對：<span id="matched-display">0 / 6</span></div>
+        <div class="stat-item">❌ 錯誤次數：<span id="mistake-display">0</span></div>
+    </div>
+
+    <div class="game-container">
+        <div class="column" id="terms-column"></div>
+        <div class="column" id="defs-column"></div>
+    </div>
+
+    <!-- 測驗完成與解析 Modal -->
+    <div class="overlay" id="reward-modal">
+        <div class="modal">
+            <h2>練習完成！ 🎉</h2>
+            <div class="modal-score" id="score-display">100%</div>
+            <div class="modal-stats">
+                <span>⏱️ 總耗時：<strong id="final-time">00:00</strong></span>
+                <span>❌ 錯誤嘗試：<strong id="final-mistakes">0</strong></span>
+            </div>
+
+            <div class="explanation-title">📖 正確答案與概念解析</div>
+            <div class="explanation-list" id="explanation-container"></div>
+
+            <button class="btn" onclick="initGame()">開始下一輪練習 🔄</button>
+        </div>
+    </div>
+
+    <!-- 頁尾版權與聯絡聲明 -->
+    <footer>
+        <p style="margin-bottom: 4px;"><strong>© 2026 Hung Hung Chua (Reed Chua). All Rights Reserved.</strong></p>
+        <p style="margin-bottom: 4px;">本測驗教材及內容受版權法保護，未經書面授權不得複製、轉載或用於商業用途。</p>
+        <p>如有課程查詢、教學合作或意見反饋，歡迎聯絡：<a href="mailto:reedchua@yahoo.com">reedchua@yahoo.com</a></p>
+    </footer>
+
+    <script>
+        const database = [
+            { id: 1, term: '核心待客態度', def: '接待員對訪客的態度影響公司第一印象，應保持誠懇、親切、友善及有禮。' },
+            { id: 2, term: '首次到訪客人處理', def: '禮貌打招呼後，可要求對方留下名片作記錄。' },
+            { id: 3, term: '無預約訪客應對', def: '應先徵求被訪者是否願意接見，不可立即拒絕對方。' },
+            { id: 4, term: '被訪者未能即時接見', def: '告知客人未能即時接見的原因，並安排客人在接待處等候及提供茶點。' },
+            { id: 5, term: '被訪者不在公司時', def: '記下訪客姓名與來訪原因，安排其他同事接見、請他下次再來或先電話預約。' },
+            { id: 6, term: '訪客登記規範', def: '將訪客資料詳細登記在訪客記錄冊上，且與客人交談時避免談及公司機密。' },
+            { id: 7, term: '咖啡或紅茶招待配料', def: '當客人點選咖啡或紅茶時，應同時端上牛奶及糖，以迎合飲食習慣。' },
+            { id: 8, term: '長會面茶水安排', def: '會議時間超過兩小時，應於會前與同事溝通是否需中途更換飲料。' },
+            { id: 9, term: '奉茶順序與方式', def: '茶杯放在茶盤內，以雙手奉客，順序為先給客人，再給公司同事。' },
+            { id: 10, term: '奉茶應對細節', def: '奉茶時微笑向客人讀出飲料名稱，隨備清潔毛巾，離開時微笑點頭。' },
+            { id: 11, term: '接聽街線電話招呼語', def: '鈴響盡快拿起，首先說出公司名稱及招呼用語（如「早安」或「午安」）。' },
+            { id: 12, term: '接聽內線電話規範', def: '說出自己的名字、部門及招呼用語，絕對不可只說「喂」。' },
+            { id: 13, term: '電話應對語氣與禁忌', def: '聲調要愉快友善、節奏適中，切勿一面進食一面講電話。' },
+            { id: 14, term: '轉駁電話處理流程', def: '轉駁來電時，必須先把來電者的姓名及要求告知接聽同事。' },
+            { id: 15, term: '替代留言便條記錄', def: '若找的人不在，應使用電話留言便條清楚記錄致意人、時間、口訊與聯絡電話。' },
+            { id: 16, term: '打電話前準備作業', def: '事前想好或寫好說話要點，並仔細核對電話號碼確定無誤。' },
+            { id: 17, term: '打電話通話與收線禮儀', def: '說話簡潔扼要，收線前確保對方明白重點，通話結束後輕輕放下聽筒。' },
+            { id: 18, term: '撥錯電話應對', def: '無論是自己撥錯或接到錯撥來電，皆應禮貌地向對方道歉或接受對方道歉。' }
+        ];
+
+        let selectedTerm = null;
+        let selectedDef = null;
+        let currentPairs = [];
+        let matchedCount = 0;
+        let mistakeCount = 0;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        const ITEMS_PER_SESSION = 6;
+
+        // 設定語音發音為廣東話 (zh-HK)
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-HK';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            secondsElapsed = 0;
+            document.getElementById('timer-display').innerText = '00:00';
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function initGame() {
+            matchedCount = 0;
+            mistakeCount = 0;
+            selectedTerm = null;
+            selectedDef = null;
+            document.getElementById('reward-modal').style.display = 'none';
+            document.getElementById('matched-display').innerText = `0 / ${ITEMS_PER_SESSION}`;
+            document.getElementById('mistake-display').innerText = '0';
+
+            startTimer();
+
+            const shuffledDb = [...database].sort(() => 0.5 - Math.random());
+            currentPairs = shuffledDb.slice(0, ITEMS_PER_SESSION);
+
+            const termsCol = document.getElementById('terms-column');
+            termsCol.innerHTML = '';
+            currentPairs.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card term';
+                card.dataset.type = 'term';
+                card.dataset.id = item.id;
+                card.onclick = () => selectCard(card, item.term);
+                card.innerHTML = `<div class="text">${item.term}</div>`;
+                termsCol.appendChild(card);
+            });
+
+            const defsCol = document.getElementById('defs-column');
+            defsCol.innerHTML = '';
+            const shuffledDefs = [...currentPairs].sort(() => 0.5 - Math.random());
+            shuffledDefs.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.type = 'def';
+                card.dataset.id = item.id;
+                card.onclick = () => selectCard(card, item.def);
+                card.innerHTML = `<div class="text">${item.def}</div>`;
+                defsCol.appendChild(card);
+            });
+
+            speak('新一輪接待與電話應對練習開始。');
+        }
+
+        function selectCard(card, soundText) {
+            if (card.classList.contains('matched')) return;
+
+            speak(soundText);
+            const type = card.dataset.type;
+
+            if (type === 'term') {
+                if (selectedTerm) selectedTerm.classList.remove('selected');
+                selectedTerm = card;
+                card.classList.add('selected');
+            } else {
+                if (selectedDef) selectedDef.classList.remove('selected');
+                selectedDef = card;
+                card.classList.add('selected');
+            }
+
+            if (selectedTerm && selectedDef) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const termId = selectedTerm.dataset.id;
+            const defId = selectedDef.dataset.id;
+
+            if (termId === defId) {
+                const t = selectedTerm;
+                const d = selectedDef;
+
+                setTimeout(() => {
+                    t.classList.remove('selected');
+                    d.classList.remove('selected');
+                    t.classList.add('matched');
+                    d.classList.add('matched');
+
+                    speak('配對正確。');
+                    matchedCount++;
+                    document.getElementById('matched-display').innerText = `${matchedCount} / ${ITEMS_PER_SESSION}`;
+
+                    if (matchedCount === ITEMS_PER_SESSION) {
+                        stopTimer();
+                        setTimeout(showReward, 600);
+                    }
+                }, 200);
+
+                selectedTerm = null;
+                selectedDef = null;
+            } else {
+                mistakeCount++;
+                document.getElementById('mistake-display').innerText = mistakeCount;
+
+                setTimeout(() => {
+                    speak('配對錯誤，請再試一次。');
+                    if(selectedTerm) selectedTerm.classList.remove('selected');
+                    if(selectedDef) selectedDef.classList.remove('selected');
+                    selectedTerm = null;
+                    selectedDef = null;
+                }, 400);
+            }
+        }
+
+        function showReward() {
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            const timeStr = `${mins}:${secs}`;
+            
+            const totalAttempts = ITEMS_PER_SESSION + mistakeCount;
+            const accuracy = Math.round((ITEMS_PER_SESSION / totalAttempts) * 100);
+
+            document.getElementById('score-display').innerText = `正確率：${accuracy}%`;
+            document.getElementById('final-time').innerText = timeStr;
+            document.getElementById('final-mistakes').innerText = mistakeCount;
+
+            const expContainer = document.getElementById('explanation-container');
+            expContainer.innerHTML = '';
+            currentPairs.forEach(item => {
+                const expItem = document.createElement('div');
+                expItem.className = 'explanation-item';
+                expItem.innerHTML = `<strong>📌 ${item.term}</strong>${item.def}`;
+                expContainer.appendChild(expItem);
+            });
+
+            document.getElementById('reward-modal').style.display = 'flex';
+            speak(`練習完成！你的正確率係 ${accuracy} 百分比。`);
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
